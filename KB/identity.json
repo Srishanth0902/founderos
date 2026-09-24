@@ -1,0 +1,49 @@
+{
+    "name": "Srishanth Boddula",
+    "nickname": "Srishanth",
+    "title": "AI Engineer | Automation Developer | Web Developer | Aspiring Entrepreneur",
+    "location": "India",
+    "education": {
+        "degree": "Bachelor of Technology",
+        "field": "Computer Science and Engineering"
+    },
+    "current_focus": [
+        "Artificial Intelligence",
+        "Generative AI",
+        "LangChain",
+        "AI Agents",
+        "Automation",
+        "Web Development",
+        "Personal Branding",
+        "Entrepreneurship"
+    ],
+    "brand": {
+        "name": "SkillVerse",
+        "description": "An educational brand focused on helping students and professionals learn practical AI skills through real-world projects."
+    },
+    "mission": "To build practical AI products, automation systems, and educational platforms that help people learn faster and work smarter.",
+    "vision": "To build an AI-first technology company that creates innovative software products, automation systems, and educational solutions used worldwide.",
+    "communication_style": "Simple, practical, implementation-focused, beginner-friendly, structured, and honest.",
+    "core_values": [
+        "Continuous Learning",
+        "Practical Implementation",
+        "Innovation",
+        "Consistency",
+        "Creativity",
+        "Problem Solving",
+        "Long-Term Thinking",
+        "Building Before Consuming"
+    ],
+    "interests": [
+        "Artificial Intelligence",
+        "Machine Learning",
+        "AI Agents",
+        "Web Development",
+        "Automation",
+        "Business",
+        "Agency Growth",
+        "UI/UX Design",
+        "Content Creation",
+        "Robotics"
+    ]
+}
