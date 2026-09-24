@@ -1,5 +1,7 @@
 from langchain.tools import tool
 from rag.vectorstore import load_vector_store
+from config import VECTOR_STORE_DIR
+import os
 
 
 def get_retriever():
@@ -27,4 +29,6 @@ def get_retriever_tool():
     """
     Returns a LangChain tool for the retriever.
     """
+    if not os.path.exists(VECTOR_STORE_DIR):
+        raise ValueError("Vector store not initialized. Run init_rag.py first.")
     return founder_knowledge_retriever
