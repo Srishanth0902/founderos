@@ -72,11 +72,11 @@ with st.sidebar:
     st.markdown("---")
     st.markdown("### Suggested Actions")
     if st.button("Learn about me"):
-        st.session_state.messages.append({"role": "user", "content": "Tell me about yourself."})
+        st.session_state.pending_prompt = "Tell me about yourself."
     if st.button("Calculate ROI"):
-        st.session_state.messages.append({"role": "user", "content": "Calculate the ROI of a $500 investment that yields $1500."})
+        st.session_state.pending_prompt = "Calculate the ROI of a $500 investment that yields $1500."
     if st.button("Plan a project"):
-        st.session_state.messages.append({"role": "user", "content": "Help me plan a new AI SaaS project."})
+        st.session_state.pending_prompt = "Help me plan a new AI SaaS project."
 
 # Map display mode to internal mode
 mode_mapping = {
@@ -91,8 +91,12 @@ for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
         st.write(msg["content"])
 
-# Chat input
-if prompt := st.chat_input("How can I help you today?"):
+# Chat input and queued suggested actions share the same agent execution path.
+prompt = st.chat_input("How can I help you today?")
+if prompt is None:
+    prompt = st.session_state.pop("pending_prompt", None)
+
+if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.write(prompt)
