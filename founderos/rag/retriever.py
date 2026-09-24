@@ -18,7 +18,11 @@ def get_retriever():
 @tool
 def founder_knowledge_retriever(query: str) -> str:
     """Searches and returns information about the founder's resume, portfolio, skills, achievements, personality, goals, and projects."""
-    retriever = get_retriever()
+    try:
+        retriever = get_retriever()
+    except (FileNotFoundError, ValueError, RuntimeError):
+        return "Founder knowledge search is unavailable because the vector store has not been initialized."
+
     docs = retriever.invoke(query)
     if not docs:
         return "No relevant knowledge found."
