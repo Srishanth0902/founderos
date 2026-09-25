@@ -1,0 +1,21 @@
+# Vercel deployment of the FounderOS web app (web.py + static/index.html).
+# Vercel installs these dependencies; the Streamlit app (app.py) uses requirements.txt.
+[project]
+name = "founderos"
+version = "1.0.0"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi",
+    "langchain",
+    "langgraph",
+    "langchain-community",
+    "langchain-text-splitters",
+    "langchain-google-genai",
+    "langchain-openai",
+    "faiss-cpu",
+    "ddgs",
+    "python-dotenv",
+]
+
+[tool.vercel]
+entrypoint = "web:app"

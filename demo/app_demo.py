@@ -6,7 +6,7 @@ Streamlit entry point for recording the FounderOS demo.
 It runs founderos/app.py unchanged. Two things are added around it:
 
 * No GOOGLE_API_KEY / GEMINI_API_KEY / OPENAI_API_KEY (or FOUNDEROS_OFFLINE=1):
-  the Gemini classes are replaced by the offline stand-in in offline_model.py and
+  the Gemini classes are replaced by the offline stand-in in founderos/offline_model.py and
   a FAISS index is built with local embeddings in data/vector_store_offline.
   With a key, the real model and the normal index (python init_rag.py) are used.
 * Every tool call (name, input, output) is appended to the JSONL file named by
