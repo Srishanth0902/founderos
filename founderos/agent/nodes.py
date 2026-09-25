@@ -1,7 +1,8 @@
 from typing import Literal
 from langchain_core.messages import ToolMessage
 from langgraph.prebuilt import ToolNode
-from config import LLM_PROVIDER, CHAT_MODEL
+import os
+from config import LLM_PROVIDER, CHAT_MODEL, PROMPTS_DIR
 from rag.retriever import get_retriever_tool
 from tools.calculator import calculator
 from tools.search import web_search
@@ -35,14 +36,14 @@ def call_model(state):
     # Read appropriate system prompt based on mode
     mode = state.get("mode", "normal")
     if mode == "recruiter":
-        prompt_file = "prompts/recruiter_prompt.txt"
+        prompt_file = os.path.join(PROMPTS_DIR, "recruiter_prompt.txt")
     elif mode == "daily_assistant":
-        prompt_file = "prompts/daily_assistant_prompt.txt"
+        prompt_file = os.path.join(PROMPTS_DIR, "daily_assistant_prompt.txt")
     else:
-        prompt_file = "prompts/system_prompt.txt"
+        prompt_file = os.path.join(PROMPTS_DIR, "system_prompt.txt")
         
     try:
-        with open(prompt_file, "r") as f:
+        with open(prompt_file, "r", encoding="utf-8") as f:
             sys_prompt_text = f.read()
     except:
         sys_prompt_text = "You are FounderOS."
