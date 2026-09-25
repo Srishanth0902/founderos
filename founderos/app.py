@@ -42,6 +42,11 @@ def normalize_text_content(content):
     return str(content)
 
 
+def escape_dollars(text):
+    # Streamlit markdown treats text between two "$" as LaTeX, which garbles amounts like "$500 ... $1500".
+    return text.replace("$", "\\$")
+
+
 # Configure page
 st.set_page_config(page_title="FounderOS - My Digital Twin", page_icon="🧠", layout="centered")
 
@@ -89,7 +94,7 @@ internal_mode = mode_mapping[mode]
 # Display chat messages
 for msg in st.session_state.messages:
     with st.chat_message(msg["role"]):
-        st.write(msg["content"])
+        st.write(escape_dollars(msg["content"]))
 
 # Chat input and queued suggested actions share the same agent execution path.
 prompt = st.chat_input("How can I help you today?")
@@ -99,7 +104,7 @@ if prompt is None:
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
-        st.write(prompt)
+        st.write(escape_dollars(prompt))
 
     with st.chat_message("assistant"):
         with st.spinner("FounderOS is thinking..."):
@@ -122,5 +127,5 @@ if prompt:
 
             raw_message = response["messages"][-1]
             final_msg = normalize_text_content(getattr(raw_message, "content", raw_message))
-            st.write(final_msg)
+            st.write(escape_dollars(final_msg))
             st.session_state.messages.append({"role": "assistant", "content": final_msg})

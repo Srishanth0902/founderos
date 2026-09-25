@@ -4,6 +4,6 @@ __pycache__/
 .pytest_cache/
 .venv/
 venv/
-data/vector_store/
+**/data/vector_store*/
 .streamlit/secrets.toml
 *.log

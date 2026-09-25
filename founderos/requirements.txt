@@ -5,7 +5,7 @@ langchain-community
 langchain-google-genai
 langchain-openai
 faiss-cpu
-duckduckgo-search
+ddgs
 python-dotenv
 tiktoken
 pymupdf
