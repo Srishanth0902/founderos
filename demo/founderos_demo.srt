@@ -1,0 +1,48 @@
+1
+00:00:00,000 --> 00:00:03,450
+Meet FounderOS, Srishanth's AI digital twin.
+
+2
+00:00:03,420 --> 00:00:07,723
+It knows his experience, remembers his projects, and reasons like him.
+
+3
+00:00:07,775 --> 00:00:18,948
+Under the hood it's a LangGraph agent with a FAISS knowledge base of his projects, skills, beliefs and routines, plus tools for maths, web search, planning and business advice.
+
+4
+00:00:18,918 --> 00:00:21,365
+The sidebar switches between three modes.
+
+5
+00:00:21,918 --> 00:00:29,485
+Ask it to introduce itself, and the agent calls the knowledge retriever, then answers in first person from his real profile.
+
+6
+00:00:30,036 --> 00:00:38,073
+Business maths goes to the calculator tool: five hundred dollars that returns fifteen hundred is a two hundred percent ROI.
+
+7
+00:00:38,627 --> 00:00:47,560
+In Recruiter Mode, the same agent pitches Srishanth to a hiring manager: his projects, his tech stack, and his philosophy, in his own words.
+
+8
+00:00:48,111 --> 00:00:56,894
+Daily Assistant Mode plans his day around his real routine: learning in the morning, building in the afternoon, and proposals in the evening.
+
+9
+00:00:57,657 --> 00:01:05,437
+And for a new idea, the project planner drafts the architecture, timeline, risks and deployment, using his preferred stack.
+
+10
+00:01:05,992 --> 00:01:16,396
+Back in Normal Mode, ask whether to take a well-paid client project in an unfamiliar stack, and it reasons through his own decision framework, not generic tips.
+
+11
+00:01:16,951 --> 00:01:20,998
+FounderOS: an AI co-founder that thinks like its founder.
+
+12
+00:01:20,968 --> 00:01:26,402
+This recording uses an offline stand-in model; add a Gemini key for live answers.
+
