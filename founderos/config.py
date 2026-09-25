@@ -1,4 +1,5 @@
 import os
+import tempfile
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -20,7 +21,11 @@ if not LLM_PROVIDER:
 
 # RAG Configurations
 KNOWLEDGE_DIR = os.path.join(BASE_DIR, "knowledge")
-VECTOR_STORE_DIR = os.path.join(BASE_DIR, "data", "vector_store")
+# Serverless hosts (Vercel) only allow writing to the temp directory.
+_ON_VERCEL = bool(os.getenv("VERCEL") or os.getenv("__VC_HANDLER_ENTRYPOINT"))
+VECTOR_STORE_DIR = os.getenv("VECTOR_STORE_DIR") or (
+    os.path.join(tempfile.gettempdir(), "founderos_vector_store") if _ON_VERCEL
+    else os.path.join(BASE_DIR, "data", "vector_store"))
 PROMPTS_DIR = os.path.join(BASE_DIR, "prompts")
 
 # Models (override with CHAT_MODEL / EMBEDDING_MODEL). The Gemini defaults are current names:

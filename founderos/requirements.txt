@@ -9,3 +9,5 @@ ddgs
 python-dotenv
 tiktoken
 pymupdf
+fastapi
+uvicorn

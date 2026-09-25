@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FounderOS – My Digital Twin</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%A7%A0%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #ffffff; --panel: #f0f2f6; --text: #262730; --muted: #6b6f7b; --border: #d9dbe3;
+    --accent: #ff4b4b; --user: #f0f2f6; --note-bg: #fff8e6; --note-border: #f2c94c; --code: #eef0f5;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0e1117; --panel: #1a1d26; --text: #e6e7eb; --muted: #9ea3b0; --border: #2e3240;
+            --user: #1f2330; --note-bg: #2a2412; --note-border: #8a6d1d; --code: #232734; }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.6 "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif; }
+  .layout { display: flex; min-height: 100vh; }
+  aside { width: 290px; flex: none; background: var(--panel); padding: 28px 22px; display: flex; flex-direction: column; gap: 18px;
+          position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  aside h2 { font-size: 20px; margin: 0; }
+  aside h3 { font-size: 17px; margin: 6px 0 0; }
+  label { font-size: 14px; color: var(--muted); display: block; margin-bottom: 6px; }
+  select { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font: inherit; font-size: 15px; }
+  .actions { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+  button { font: inherit; cursor: pointer; }
+  .action { padding: 7px 12px; border-radius: 8px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 15px; }
+  .action:hover { border-color: var(--accent); color: var(--accent); }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 4px 0; width: 100%; }
+  .note { font-size: 13px; color: var(--muted); line-height: 1.5; }
+  main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  .content { width: 100%; max-width: 760px; margin: 0 auto; padding: 48px 24px 150px; flex: 1; }
+  h1 { font-size: 40px; line-height: 1.15; margin: 0 0 10px; letter-spacing: -0.01em; }
+  .tagline { font-style: italic; color: var(--muted); margin: 0 0 24px; }
+  .banner { background: var(--note-bg); border-left: 4px solid var(--note-border); padding: 10px 14px; border-radius: 6px; font-size: 14px; margin-bottom: 20px; }
+  .msg { display: flex; gap: 12px; padding: 14px 16px; border-radius: 10px; margin-bottom: 12px; }
+  .msg.user { background: var(--user); }
+  .avatar { flex: none; width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-size: 17px; }
+  .msg.user .avatar { background: var(--accent); }
+  .msg.assistant .avatar { background: #ffbd45; }
+  .body { min-width: 0; overflow-wrap: anywhere; }
+  .body > :first-child { margin-top: 0; } .body > :last-child { margin-bottom: 0; }
+  .body p { margin: 0 0 10px; } .body ul, .body ol { margin: 0 0 10px; padding-left: 22px; }
+  .body h4 { margin: 12px 0 6px; font-size: 16px; }
+  .body code { background: var(--code); padding: 1px 5px; border-radius: 4px; font-size: 14px; }
+  .body pre { background: var(--code); padding: 12px; border-radius: 8px; overflow-x: auto; }
+  .body pre code { background: none; padding: 0; }
+  .meta { font-size: 13px; color: var(--muted); margin-top: 8px; }
+  .error { color: #d33; }
+  .typing { color: var(--muted); font-style: italic; }
+  form { position: fixed; bottom: 0; right: 0; left: 290px; background: linear-gradient(transparent, var(--bg) 30%); padding: 24px 24px 22px; }
+  .inputbar { max-width: 760px; margin: 0 auto; display: flex; gap: 8px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 8px; }
+  textarea { flex: 1; resize: none; border: 0; background: transparent; color: var(--text); font: inherit; padding: 8px 10px; max-height: 160px; outline: none; }
+  .send { border: 0; border-radius: 8px; background: var(--accent); color: #fff; padding: 0 16px; font-weight: 600; }
+  .send:disabled { opacity: .5; cursor: default; }
+  @media (max-width: 800px) {
+    .layout { flex-direction: column; }
+    aside { width: 100%; padding: 18px 16px; position: static; height: auto; }
+    .content { padding: 24px 16px 150px; }
+    h1 { font-size: 30px; }
+    form { left: 0; padding: 16px; }
+  }
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside>
+    <h2>Settings</h2>
+    <div>
+      <label for="mode">Select Mode</label>
+      <select id="mode">
+        <option value="normal">Normal Mode</option>
+        <option value="recruiter">Recruiter Mode</option>
+        <option value="daily_assistant">Daily Assistant Mode</option>
+      </select>
+    </div>
+    <hr>
+    <h3>Suggested Actions</h3>
+    <div class="actions">
+      <button class="action" type="button" data-prompt="Tell me about yourself.">Learn about me</button>
+      <button class="action" type="button" data-prompt="Calculate the ROI of a $500 investment that yields $1500.">Calculate ROI</button>
+      <button class="action" type="button" data-prompt="Help me plan a new AI SaaS project.">Plan a project</button>
+    </div>
+    <hr>
+    <div class="note" id="model-note">Connecting…</div>
+  </aside>
+  <main>
+    <div class="content">
+      <h1>FounderOS – My Digital Twin</h1>
+      <p class="tagline">An AI-powered digital twin that understands my experience, remembers my projects, reasons like me, and helps solve real-world problems.</p>
+      <div class="banner" id="offline-banner" hidden><strong>Offline demo mode.</strong> No API key is configured, so an offline stand-in model answers only from the knowledge base and tool results. Add <code>GOOGLE_API_KEY</code> to use Gemini.</div>
+      <div id="chat" aria-live="polite"></div>
+    </div>
+    <form id="form">
+      <div class="inputbar">
+        <textarea id="input" rows="1" placeholder="How can I help you today?" aria-label="Message"></textarea>
+        <button class="send" id="send" type="submit">Send</button>
+      </div>
+    </form>
+  </main>
+</div>
+<script>
+  const $ = (s) => document.querySelector(s);
+  const history = [];
+  let busy = false;
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+  function inline(s) {
+    return s.replace(/`([^`]+)`/g, "<code>$1</code>")
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[^*\w])\*([^*\s][^*]*?)\*(?!\w)/g, "$1<em>$2</em>")
+      .replace(/(^|\s)_([^_\s][^_]*?)_(?=\s|$|[.,;:!?)])/g, "$1<em>$2</em>");
+  }
+  // Small, safe Markdown subset: text is escaped first.
+  function md(src) {
+    const lines = String(src || "").replace(/\r/g, "").split("\n");
+    const out = []; let para = []; let list = null;
+    const flushPara = () => { if (para.length) { out.push(`<p>${para.map((l) => inline(escapeHtml(l))).join("<br>")}</p>`); para = []; } };
+    const flushList = () => { if (list) { out.push(`<${list.type}>${list.items.map((i) => `<li>${inline(escapeHtml(i))}</li>`).join("")}</${list.type}>`); list = null; } };
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      if (/^```/.test(line.trim())) {
+        flushPara(); flushList();
+        const code = []; i++;
+        while (i < lines.length && !/^```/.test(lines[i].trim())) code.push(lines[i++]);
+        out.push(`<pre><code>${escapeHtml(code.join("\n"))}</code></pre>`);
+        continue;
+      }
+      const heading = line.match(/^#{1,4}\s+(.*)$/);
+      if (heading) { flushPara(); flushList(); out.push(`<h4>${inline(escapeHtml(heading[1]))}</h4>`); continue; }
+      const bullet = line.match(/^\s*[-*•]\s+(.*)$/);
+      const numbered = line.match(/^\s*\d+[.)]\s+(.*)$/);
+      if (bullet || numbered) {
+        flushPara();
+        const type = bullet ? "ul" : "ol";
+        if (!list || list.type !== type) { flushList(); list = { type, items: [] }; }
+        list.items.push((bullet || numbered)[1]);
+        continue;
+      }
+      if (!line.trim()) { flushPara(); flushList(); continue; }
+      flushList(); para.push(line);
+    }
+    flushPara(); flushList();
+    return out.join("");
+  }
+
+  function addMessage(role, html, meta) {
+    const el = document.createElement("div");
+    el.className = `msg ${role}`;
+    el.innerHTML = `<div class="avatar">${role === "user" ? "🙂" : "🧠"}</div><div class="body">${html}${meta ? `<div class="meta">${meta}</div>` : ""}</div>`;
+    $("#chat").append(el);
+    el.scrollIntoView({ behavior: "smooth", block: "start" });
+    return el;
+  }
+
+  async function send(text) {
+    text = text.trim();
+    if (!text || busy) return;
+    busy = true; $("#send").disabled = true;
+    addMessage("user", `<p>${escapeHtml(text)}</p>`);
+    const pending = addMessage("assistant", `<p class="typing">FounderOS is thinking…</p>`);
+    try {
+      const res = await fetch("/api/chat", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: text, mode: $("#mode").value, history }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.detail || `HTTP ${res.status}`);
+      const tools = data.tools && data.tools.length ? `Tools used: ${[...new Set(data.tools)].map(escapeHtml).join(", ")}` : "";
+      pending.querySelector(".body").innerHTML = md(data.answer) + (tools ? `<div class="meta">${tools}</div>` : "");
+      history.push({ role: "user", content: text }, { role: "assistant", content: data.answer });
+    } catch (err) {
+      pending.querySelector(".body").innerHTML = `<p class="error">Sorry, that failed: ${escapeHtml(err.message)}</p>`;
+    }
+    busy = false; $("#send").disabled = false; $("#input").focus();
+  }
+
+  $("#form").addEventListener("submit", (e) => { e.preventDefault(); const t = $("#input").value; $("#input").value = ""; send(t); });
+  $("#input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && !e.isComposing) { e.preventDefault(); $("#form").requestSubmit(); }
+  });
+  document.querySelectorAll(".action").forEach((b) => b.addEventListener("click", () => send(b.dataset.prompt)));
+
+  fetch("/api/info").then((r) => r.json()).then((info) => {
+    $("#offline-banner").hidden = !info.offline;
+    $("#model-note").innerHTML = info.offline
+      ? "<strong>Model:</strong> offline stand-in. The LangGraph agent, tools and FAISS retrieval run for real; answers are built only from their results."
+      : `<strong>Model:</strong> ${escapeHtml(info.model)} · LangGraph agent with FAISS RAG and 7 tools.`;
+  }).catch(() => { $("#model-note").textContent = "Server unreachable."; });
+</script>
+</body>
+</html>

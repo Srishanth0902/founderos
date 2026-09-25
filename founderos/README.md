@@ -25,8 +25,20 @@ An AI-powered digital twin that understands my experience, remembers my projects
 
 ## Deployment
 
-FounderOS is a Streamlit app, which needs a long-running server. **Vercel cannot host it**: Vercel runs Python only as
-request-handler functions, so its build fails with `Found app.py but it does not export a top-level "app"`.
+### Vercel (web version)
+
+Vercel cannot run Streamlit, so `web.py` serves the same agent (prompts, tools, FAISS knowledge base) through FastAPI
+with a single-page chat UI in `static/index.html`. `pyproject.toml` and `vercel.json` in this folder configure it.
+
+1. In Vercel, import the repository and set **Root Directory** to `founderos`.
+2. Add `GOOGLE_API_KEY` under Settings, then Environment Variables. Without a key the site runs in a labelled offline
+   demo mode that answers only from the knowledge base and tool results.
+3. Deploy. The first chat on a new instance builds the FAISS index in `/tmp` (a few seconds). Vercel also installs part
+   of the dependencies when an instance starts, because together they exceed its bundle size limit.
+
+Run the web version locally with `uvicorn web:app --reload` from this folder.
+
+### Streamlit
 
 **Streamlit Community Cloud (free):**
 1. Go to [share.streamlit.io](https://share.streamlit.io), sign in with GitHub, and choose **Create app**, then the option to deploy from a GitHub repo.
