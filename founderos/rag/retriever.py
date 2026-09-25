@@ -31,8 +31,10 @@ def founder_knowledge_retriever(query: str) -> str:
 
 def get_retriever_tool():
     """
-    Returns a LangChain tool for the retriever.
+    Returns a LangChain tool for the retriever, building the vector store first if it is missing.
     """
     if not os.path.exists(VECTOR_STORE_DIR):
-        raise ValueError("Vector store not initialized. Run init_rag.py first.")
+        # The index is git-ignored, so a fresh deployment has none: build it from the knowledge files.
+        from init_rag import init_vector_store
+        init_vector_store()
     return founder_knowledge_retriever
